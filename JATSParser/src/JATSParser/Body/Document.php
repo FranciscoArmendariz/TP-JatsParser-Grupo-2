@@ -1,6 +1,4 @@
-<?php
-
-namespace JATSParser\Body;
+<?php namespace JATSParser\Body;
 
 use JATSParser\Body\Section as Section;
 use JATSParser\Back\Journal as Journal;
@@ -8,8 +6,7 @@ use JATSParser\Back\Book as Book;
 use JATSParser\Back\Chapter as Chapter;
 use JATSParser\Back\Conference as Conference;
 
-class Document
-{
+class Document {
 
 	/* @var $document \DOMDocument */
 	private $document;
@@ -31,8 +28,7 @@ class Document
 	private $articleFrontContent = array();
 
 
-	function __construct(?string $documentPath)
-	{
+	function __construct(?string $documentPath) {
 		$document = new \DOMDocument;
 		$this->document = $document->load($documentPath);
 		self::$xpath = new \DOMXPath($document);
@@ -41,23 +37,19 @@ class Document
 		$this->extractReferences();
 	}
 
-	public static function getXpath(): \DOMXPath
-	{
+	public static function getXpath() : \DOMXPath {
 		return self::$xpath;
 	}
 
-	public function getDocumentPath(): string
-	{
+	public function getDocumentPath () : string {
 		return $this->documentPath;
 	}
 
-	public function getArticleSections(): array
-	{
+	public function getArticleSections() : array {
 		return $this->articleContent;
 	}
 
-	public function getReferences(): array
-	{
+	public function getReferences() : array {
 		return $this->references;
 	}
 
@@ -66,12 +58,11 @@ class Document
 	 * Here we are trying to determine the type of citation by element-citation node attribute or names of nodes which reference contains;
 	 * Supported types are: journal, book, chapter, and conference.
 	 */
-	private function extractReferences()
-	{
+	private function extractReferences() {
 		$references = array();
-		foreach (self::$xpath->evaluate("/article/back/ref-list/ref") as $reference) {
+		foreach(self::$xpath->evaluate("/article/back/ref-list/ref") as $reference ) {
 			/* @var $reference \DOMElement */
-			$citationTypeNodes = self::$xpath->query(".//element-citation[1]/@publication-type|.//mixed-citation[1]/@publication-type|.//citation-alternatives[1]/@publication-type", $reference);
+			$citationTypeNodes = self::$xpath->query(".//element-citation[1]/@publication-type|.//mixed-citation[1]/@publication-type|.//citation-alternatives[1]/@publication-type", $reference );
 			if ($citationTypeNodes->length > 0) {
 				foreach ($citationTypeNodes as $citationTypeNode) {
 					/* @var $citationTypeNode \DOMAttr */
@@ -105,12 +96,12 @@ class Document
 					$references[] = $probablyChapter;
 				} else {
 					$publisherName = self::$xpath->query(".//publisher-name", $reference);
-					if ($publisherName->length > 0) {
+					if($publisherName->length > 0) {
 						$probablyBook = new Book($reference);
 						$references[] = $probablyBook;
 					} else {
 						$confNameNode = self::$xpath->query(".//conf-name", $reference);
-						if ($confNameNode->length > 0) {
+						if($confNameNode->length > 0) {
 							$probablyConference = new Conference($reference);
 							$references[] = $probablyConference;
 						} else {
@@ -176,7 +167,7 @@ class Document
 		}
 
 		// Added added by UNLa
-		foreach (self::$xpath->evaluate("/article/back") as $back) {
+		foreach (self::$xpath->evaluate("/article/back") as $back) { 
 			foreach (self::$xpath->evaluate(".//ack|.//fn-group/fn|.//app-group/app", $back) as $backContent) {
 				switch ($backContent->nodeName) {
 					case "ack":
@@ -215,4 +206,5 @@ class Document
 
 		$this->articleContent = $articleContent;
 	}
+
 }
