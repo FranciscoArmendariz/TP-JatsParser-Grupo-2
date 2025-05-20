@@ -162,6 +162,11 @@ class Document extends \DOMDocument {
 					$parentEl->appendChild($figure);
 					$figure->setContent($articleSection);
 					break;
+				case "JATSParser\Body\Graphic":
+					$graphic = new Graphic();
+					$parentEl->appendChild($graphic);
+					$graphic->setContent($articleSection);
+					break;
 				case "JATSParser\Body\Media":
 					$media = new Media();
 					$parentEl->appendChild($media);

@@ -146,6 +146,10 @@ class Document {
 						$figure = new Figure($content);
 						$articleContent[] = $figure;
 						break;
+						case "inline-graphic":
+						$graphic = new Graphic($content);
+						$articleContent[] = $graphic;
+						break;
 					case "media":
 						$media = new Media($content);
 						$articleContent[] = $media;
