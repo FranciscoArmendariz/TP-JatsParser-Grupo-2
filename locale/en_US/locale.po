@@ -26,6 +26,12 @@ msgstr "Full-text of the article is available for these languages:"
 msgid "plugins.generic.jatsParser.workflow.settings"
 msgstr "JATS Parser Settings"
 
+msgid "plugins.generic.jatsParser.workflow.tab.settings"
+msgstr "Settings"
+
+msgid "plugins.generic.jatsParser.workflow.tab.subtitle1"
+msgstr "Subtitle 1 Style"
+
 msgid "plugins.generic.jatsParser.settings.description"
 msgstr "JATSParser plugin settings menu"
 

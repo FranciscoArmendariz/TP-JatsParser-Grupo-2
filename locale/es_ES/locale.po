@@ -26,6 +26,12 @@ msgstr "El texto completo del artículo está disponible en:"
 msgid "plugins.generic.jatsParser.workflow.settings"
 msgstr "Ajustes de JATS Parser"
 
+msgid "plugins.generic.jatsParser.workflow.tab.settings"
+msgstr "Ajustes"
+
+msgid "plugins.generic.jatsParser.workflow.tab.subtitle1"
+msgstr "Estilo Subtítulo 1"
+
 msgid "plugins.generic.jatsParser.settings.description"
 msgstr "Menú de ajustes de JATSParser plugin"
 
