@@ -18,8 +18,20 @@ class Graphic extends \DOMElement
     {
 
         $this->setAttribute("class", "graphic");
-        $this->setAttribute("alt", "graphic file with name " + $jatsInlineGraphic->getLink());
         $this->setAttribute("src", rawurlencode($jatsInlineGraphic->getLink()));
-        $this->setAttribute("id", $jatsInlineGraphic->getId());
+
+        $alt = "";
+        $title = $jatsInlineGraphic->getTitle();
+        if (isset($title) && $title !== '') {
+            $alt = $title;
+        } else {
+            $alt = "graphic file with name " . $jatsInlineGraphic->getLink();
+        }
+        $this->setAttribute("alt", $alt);
+
+        $id = $jatsInlineGraphic->getId();
+        if (isset($id) && $id !== '') {
+            $this->setAttribute("id", $id);
+        }
     }
 }
