@@ -32,6 +32,30 @@ msgstr "Ajustes"
 msgid "plugins.generic.jatsParser.workflow.tab.subtitle1"
 msgstr "Estilo Subtítulo 1"
 
+msgid "plugins.generic.jatsParser.subtitle1.description"
+msgstr "Configuración de estilos de subtitulo 1"
+
+msgid "plugins.generic.jatsParser.subtitle1.color"
+msgstr "Color del texto*"
+
+msgid "plugins.generic.jatsParser.subtitle1.font.size"
+msgstr "Tamaño de fuente*"
+
+msgid "plugins.generic.jatsParser.subtitle1.rem"
+msgstr "rem"
+
+msgid "plugins.generic.jatsParser.subtitle1.line.height"
+msgstr "Interlineado*"
+
+msgid "plugins.generic.jatsParser.subtitle1.font.family"
+msgstr "Tipo de fuente*"
+
+msgid "plugins.generic.jatsParser.subtitle1.font.weight"
+msgstr "Peso de la funte*"
+
+msgid "plugins.generic.jatsParser.subtitle1.sampleText"
+msgstr "Mi ejemplo de subtitulo 1"
+
 msgid "plugins.generic.jatsParser.settings.description"
 msgstr "Menú de ajustes de JATSParser plugin"
 

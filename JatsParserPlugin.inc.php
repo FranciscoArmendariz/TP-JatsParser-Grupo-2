@@ -137,6 +137,8 @@ class JatsParserPlugin extends GenericPlugin
 				$templateMgr = TemplateManager::getManager($request);
 				$templateMgr->assign('pluginName', $this->getName());
 				return $templateMgr->fetchJson($this->getTemplateResource('settingsTabs.tpl'));
+			case 'css':
+				return $this->getEditableCss($request);
 		}
 		return parent::manage($args, $request);
 	}
@@ -635,7 +637,7 @@ class JatsParserPlugin extends GenericPlugin
 		$citationStrings = $citationTokenizer->execute($rawCitations);
 
 		if (!is_array($citationStrings) || empty($citationStrings)) return $htmlString;
-		$htmlString .= '<h2 class="article-section-title" id="reference-title">' . __('submission.citations', null, $locale) . '</h2>';
+		$htmlString .= '<h2 class="article-section-title subtitle1" id="reference-title">' . __('submission.citations', null, $locale) . '</h2>';
 		$htmlString .= "\n";
 		$htmlString .= '<ol id="references">';
 		$htmlString .= "\n";
@@ -923,6 +925,23 @@ class JatsParserPlugin extends GenericPlugin
 			}
 		}
 
+		$templateMgr = $args[0];
+		$request = Application::get()->getRequest();
+		$context = $request->getContext();
+
+		$baseUrl = $request->getBaseUrl();
+		$contextPath = $context->getPath();
+		$pluginName = $this->getName(); // e.g., "jatsparserplugin"
+
+		$cssUrl = "{$baseUrl}/index.php/{$contextPath}/$$\$call$$$/grid/settings/plugins/settings-plugin-grid/manage?category=generic&plugin={$pluginName}&verb=css";
+
+		$templateMgr->addStyleSheet(
+			'myPluginDynamicCss',
+			$cssUrl,
+			['contexts' => 'frontend']
+		);
+
+
 		return false;
 	}
 
@@ -1089,5 +1108,33 @@ class JatsParserPlugin extends GenericPlugin
 			'options' => $options,
 			'value' => null
 		]));
+	}
+
+
+	//Returns a custom css based on JastParser's settings
+	private function getEditableCss(Request $request)
+	{
+		$context = $request->getContext();
+		$textColor = $this->getSetting($context->getId(), 'textColor');
+		$fontSize = $this->getSetting($context->getId(), 'fontSize') . "rem";
+		$lineHeight = $this->getSetting($context->getId(), 'lineHeight');
+		$fontFamily = $this->getSetting($context->getId(), 'fontFamily');
+		$fontWeight = $this->getSetting($context->getId(), 'fontWeight');
+
+
+		header('Content-Type: text/css');
+
+		echo <<<CSS
+
+.subtitle1 {
+    color: $textColor !important;
+	font-size: $fontSize  !important;
+	font-family: $fontFamily !important;
+	line-height: $lineHeight !important;
+	font-weight: $fontWeight !important;
+}
+CSS;
+
+		return true;
 	}
 }

@@ -1,4 +1,6 @@
-<?php namespace JATSParser\HTML;
+<?php
+
+namespace JATSParser\HTML;
 
 use JATSParser\Body\Ack as JATSAck;
 use JATSParser\Body\Par as JATSPar;
@@ -6,17 +8,19 @@ use JATSParser\Body\Text as JATSText;
 use JATSParser\HTML\Par as Par;
 use JATSParser\HTML\Text as HTMLText;
 
-class Ack extends \DOMElement { // Added by UNLa
-	public function __construct() {
+class Ack extends \DOMElement
+{ // Added by UNLa
+	public function __construct()
+	{
 
 		parent::__construct("ack");
-
 	}
 
-	public function setContent(JATSAck $ack) {
+	public function setContent(JATSAck $ack)
+	{
 
 		$titleNode = $this->ownerDocument->createElement("h2");
-		$titleNode->setAttribute("class", "article-section-title");
+		$titleNode->setAttribute("class", "article-section-title subtitle1");
 		$this->appendChild($titleNode);
 
 		/* Set ack paragraph
@@ -35,7 +39,5 @@ class Ack extends \DOMElement { // Added by UNLa
 			$textNode = $this->ownerDocument->createTextNode($ack->getTitle());
 			$titleNode->appendChild($textNode);
 		}
-
 	}
-
 }

@@ -2,15 +2,14 @@
 
 
 /**
- * @file plugins/generic/jatsParser/JatsParserSettingsForm.inc.php
+ * @file plugins/generic/jatsParser/JatsParserSettingsSubtitle1.inc.php
  *
- * Copyright (c) 2017-2018 Vitaliy Bezsheiko, MD, Department of Psychosomatic Medicine and Psychotherapy, Bogomolets National Medical University, Kyiv, Ukraine
- * Distributed under the GNU GPL v3.
+ *  Realizado por el grupo 2 de la materia Taller de Sistemas de Gestión Editorial y Ciencia Abierta de la UNLa
  *
- * @class JatsParserSettingsForm
+ * @class JatsParserSettingsSubtitle1
  * @ingroup plugins_generic_jatsParser
  *
- * @brief Form for journal managers to modify jatsParser plugin settings
+ * @brief Form for journal managers to modify jatsParser article's subtitles
  */
 
 import('lib.pkp.classes.form.Form');
@@ -48,8 +47,35 @@ class JatsParserSettingsSubtitle1 extends Form
 		$contextId = $this->_journalId;
 		$plugin = $this->_plugin;
 
-		$this->setData('convertToPdf', $plugin->getSetting($contextId, 'convertToPdf'));
-		$this->setData('citationStyle', $plugin->getSetting($contextId, 'citationStyle'));
+		$this->setData('textColor', $plugin->getSetting($contextId, 'textColor'));
+		$this->setData('fontSize', $plugin->getSetting($contextId, 'fontSize'));
+		$this->setData('lineHeight', $plugin->getSetting($contextId, 'lineHeight'));
+		$this->setData('fontFamily', $plugin->getSetting($contextId, 'fontFamily'));
+		$this->setData('fontWeight', $plugin->getSetting($contextId, 'fontWeight'));
+
+		//Sets the Font Family options
+		$this->setData('fontFamilies', [
+			"Open Sans,sans-serif" => "Open Sans",
+			"Roboto Slab,serif" => "Roboto Slab",
+			"Droid Serif,serif" => "Droid Serif",
+			"Julius Sans One,sans-serif" => "Julius Sans One",
+			"Lato,sans-serif" => "Lato",
+			"Merriweather,serif" => "Merriweather",
+			"Arial,Helvetica,sans-serif" => "Arial",
+			"Verdana,Geneva,sans-serif" => "Verdana",
+			"Tahoma,Geneva,sans-serif" => "Tahoma",
+			"Times New Roman,Times,serif" => "Times New Roman",
+			"Courier New,Courier,monospace" => "Courier New",
+			"Georgia,serif" => "Georgia",
+			"Comic Sans MS,cursive,sans-serif" => "Comic Sans MS"
+		]);
+
+		//Sets the font wheights options
+		$this->setData('fontWeights', [
+			"100" => "Light",
+			"500" => "Normal",
+			"700" => "Bold",
+		]);
 	}
 
 	/**
@@ -57,7 +83,7 @@ class JatsParserSettingsSubtitle1 extends Form
 	 */
 	function readInputData()
 	{
-		$this->readUserVars(array('convertToPdf', 'citationStyle', 'customStyleInput', 'galleysImport'));
+		$this->readUserVars(array('textColor', 'fontSize', 'lineHeight', 'fontFamily', 'fontWeight'));
 	}
 
 	/**
@@ -69,7 +95,6 @@ class JatsParserSettingsSubtitle1 extends Form
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign([
 			'pluginName' => $this->_plugin->getName(),
-			'citationStyles' => $this->_plugin::getSupportedCitationStyles()
 		]);
 		return parent::fetch($request, $template, $display);
 	}
@@ -82,26 +107,20 @@ class JatsParserSettingsSubtitle1 extends Form
 		$plugin = $this->_plugin;
 		$contextId = $this->_journalId;
 
-		$convertToPdf = $this->getData('convertToPdf');
-		if (!$convertToPdf) {
-			$convertToPdf = false;
-		} else {
-			$convertToPdf = true;
-		}
-		$plugin->updateSetting($contextId, 'convertToPdf', $convertToPdf);
+		$textColor = $this->getData('textColor');
+		$plugin->updateSetting($contextId, 'textColor', $textColor);
 
-		// Citation Style Format
-		$citationStyle = $this->getData('citationStyle');
-		if ($citationStyle == 'customStyle') {
-			$plugin->updateSetting($contextId, 'citationStyle', $this->getData('customStyleInput'));
-		} else {
-			$plugin->updateSetting($contextId, 'citationStyle', $this->getData('citationStyle'));
-		}
+		$fontSize = $this->getData('fontSize');
+		$plugin->updateSetting($contextId, 'fontSize', $fontSize);
 
-		// Import galleys
-		if ($importGalleys = $this->getData('galleysImport')) {
-			$plugin->importGalleys();
-		}
+		$lineHeight = $this->getData('lineHeight');
+		$plugin->updateSetting($contextId, 'lineHeight', $lineHeight);
+
+		$fontFamily = $this->getData('fontFamily');
+		$plugin->updateSetting($contextId, 'fontFamily', $fontFamily);
+
+		$fontWeight = $this->getData('fontWeight');
+		$plugin->updateSetting($contextId, 'fontWeight', $fontWeight);
 
 		parent::execute(...$functionArgs);
 	}

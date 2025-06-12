@@ -1,4 +1,6 @@
-<?php namespace JATSParser\HTML;
+<?php
+
+namespace JATSParser\HTML;
 
 use JATSParser\Body\DispQuote;
 use JATSParser\Body\Document as JATSDocument;
@@ -11,7 +13,8 @@ define('JATSPARSER_CITEPROC_STYLE_DEFAULT', 'vancouver');
 define('JATSPARSER_CITEPROC_LANG_DEFAULT', 'en-US');
 define('JATSPARSER_REFERENCE_ELEMENT_ID', 'referenceList'); // Document::getRawReferences() linked to this id
 
-class Document extends \DOMDocument {
+class Document extends \DOMDocument
+{
 
 	/** @var $citationStyle string  */
 	var $citationStyle;
@@ -21,7 +24,8 @@ class Document extends \DOMDocument {
 	var $citationLang;
 	var $jatsDocument;
 
-	public function __construct(JATSDocument $jatsDocument) {
+	public function __construct(JATSDocument $jatsDocument)
+	{
 		parent::__construct('1.0', 'utf-8');
 		$this->preserveWhiteSpace = false;
 		$this->formatOutput = true;
@@ -36,7 +40,8 @@ class Document extends \DOMDocument {
 	 * @param string $lang language for citation styling
 	 * @param bool $styleInTextLinks whether to style in-text links to references
 	 */
-	public function setReferences(string $citationStyle = JATSPARSER_CITEPROC_STYLE_DEFAULT, string $lang = JATSPARSER_CITEPROC_LANG_DEFAULT, bool $styleInTextLinks = false): void {
+	public function setReferences(string $citationStyle = JATSPARSER_CITEPROC_STYLE_DEFAULT, string $lang = JATSPARSER_CITEPROC_LANG_DEFAULT, bool $styleInTextLinks = false): void
+	{
 		$this->citationStyle = $citationStyle;
 		$this->citationLang = $lang;
 		$this->styleInTextLinks = $styleInTextLinks;
@@ -45,11 +50,13 @@ class Document extends \DOMDocument {
 		}
 	}
 
-	public function getHmtlForGalley() {
+	public function getHmtlForGalley()
+	{
 		return $this->saveHTML();
 	}
 
-	public function getHtmlForTCPDF() {
+	public function getHtmlForTCPDF()
+	{
 
 		// set text-wide styles;
 		$xpath = new \DOMXPath($this);
@@ -113,7 +120,6 @@ class Document extends \DOMDocument {
 				$tableNode->parentNode->insertBefore($divNode, $nextToTableNode);
 			}
 			$divNode->appendChild($tableCaption);
-
 		}
 
 		// final preparations
@@ -128,7 +134,8 @@ class Document extends \DOMDocument {
 	/**
 	 * @param $articleSections array;
 	 */
-	protected function extractContent(array $articleSections, \DOMElement $element = null): void {
+	protected function extractContent(array $articleSections, \DOMElement $element = null): void
+	{
 
 		if ($element) {
 			$parentEl = $element;
@@ -175,7 +182,11 @@ class Document extends \DOMDocument {
 				case "JATSParser\Body\Section":
 					if ($articleSection->getTitle()) {
 						$sectionElement = $this->createElement("h" . ($articleSection->getType() + 1), $articleSection->getTitle());
-						$sectionElement->setAttribute("class", "article-section-title");
+						if (($articleSection->getType() + 1) == 2) {
+							$sectionElement->setAttribute("class", "article-section-title subtitle1");
+						} else {
+							$sectionElement->setAttribute("class", "article-section-title");
+						}
 						$parentEl->appendChild($sectionElement);
 					}
 					$this->extractContent($articleSection->getContent());
@@ -208,7 +219,7 @@ class Document extends \DOMDocument {
 					break;
 				case "JATSParser\Body\AuthorNote": // Added by UNLa
 					$titleNode = $this->createElement("h2");
-					$titleNode->setAttribute("class", "article-section-title");
+					$titleNode->setAttribute("class", "article-section-title subtitle1");
 					$this->appendChild($titleNode);
 					if (count($articleSection->getAuthorNote()) > 0) {
 						foreach ($articleSection->getAuthorNote() as $authorNode) {
@@ -224,7 +235,7 @@ class Document extends \DOMDocument {
 					break;
 				case "JATSParser\Body\Ack": //Added by UNLa
 					$titleNode = $this->createElement("h2");
-					$titleNode->setAttribute("class", "article-section-title");
+					$titleNode->setAttribute("class", "article-section-title subtitle1");
 					$this->appendChild($titleNode);
 					if (count($articleSection->getAck()) > 0) {
 						foreach ($articleSection->getAck() as $ackNode) {
@@ -242,10 +253,11 @@ class Document extends \DOMDocument {
 		}
 	}
 
-	protected function extractReferences (array $references): void {
+	protected function extractReferences(array $references): void
+	{
 
 		$referencesHeading = $this->createElement("h2");
-		$referencesHeading->setAttribute("class", "article-section-title");
+		$referencesHeading->setAttribute("class", "article-section-title subtitle1");
 		$referencesHeading->setAttribute("id", "reference-title");
 		$referencesHeading->nodeValue = "References";
 		$this->appendChild($referencesHeading);
@@ -257,7 +269,7 @@ class Document extends \DOMDocument {
 			if (!$citeProcRef->refIsEmpty()) {
 				$data[] = $citeProcRef->getContent();
 			} elseif ($citeProcRef->getJatsReference()->isMixed() && !empty(trim($citeProcRef->getJatsReference()->getRawReference()))) {
-				$rawData[] =$citeProcRef->getJatsReference();
+				$rawData[] = $citeProcRef->getJatsReference();
 			} else {
 				error_log("WARNING: reference with id " . $reference->getId() . " is invalid and cannot be parsed");
 			}
@@ -267,8 +279,8 @@ class Document extends \DOMDocument {
 
 		$style = StyleSheet::loadStyleSheet($this->getCitationStyle());
 
-		$wrapIntoListItem = function($cslItem, $renderedText) {
-			return '<li id="' . $cslItem->id .'">' . $renderedText . '</li>';
+		$wrapIntoListItem = function ($cslItem, $renderedText) {
+			return '<li id="' . $cslItem->id . '">' . $renderedText . '</li>';
 		};
 
 		$additionalMarkup = [
@@ -287,7 +299,8 @@ class Document extends \DOMDocument {
 		$this->getCiteBody($htmlString, $rawData);
 	}
 
-	protected function getCiteBody(string $htmlString, array $rawData) {
+	protected function getCiteBody(string $htmlString, array $rawData)
+	{
 		$document = new \DOMDocument('1.0', 'utf-8');
 		$document->loadXML($htmlString);
 
@@ -328,7 +341,8 @@ class Document extends \DOMDocument {
 		}
 	}
 
-	protected function setInTextLinks($citeProc, $data) {
+	protected function setInTextLinks($citeProc, $data)
+	{
 
 		$xpath = new \DOMXPath($this);
 		$links = $xpath->query('//a[@class="bibr"]');
@@ -342,11 +356,13 @@ class Document extends \DOMDocument {
 		}
 	}
 
-	public function getCitationStyle(): string {
+	public function getCitationStyle(): string
+	{
 		return $this->citationStyle;
 	}
 
-	public function saveAsValidHTML(string $documentTitle, bool $prettyPrint = false): string {
+	public function saveAsValidHTML(string $documentTitle, bool $prettyPrint = false): string
+	{
 		if ($prettyPrint) {
 			$xpath = new \DOMXPath($this);
 			$nodes = $xpath->query('//text()');
@@ -366,14 +382,14 @@ class Document extends \DOMDocument {
 			'</head>' . "\n" .
 			'<body>' . "\n" .
 			$htmlString .
-			'</body>'. "\n" .
+			'</body>' . "\n" .
 			'</html>';
 
 		return $htmlString;
-
 	}
 
-	public function saveAsHTML($element = null) {
+	public function saveAsHTML($element = null)
+	{
 
 		$htmlString = $element ? $this->saveXML($element) : $this->saveXML($this);
 
@@ -392,14 +408,16 @@ class Document extends \DOMDocument {
 	 * @param bool $prettyPrint
 	 * @return void
 	 */
-	public function saveAsValidHTMLFile(string $filename, string $documentTitle, bool $prettyPrint = true): void {
+	public function saveAsValidHTMLFile(string $filename, string $documentTitle, bool $prettyPrint = true): void
+	{
 		file_put_contents($filename, $this->saveAsValidHTML($documentTitle, $prettyPrint));
 	}
 
 	/**
 	 * @return array of references, where key is unique id, ordered according to appearance in JATS XML
 	 */
-	public function getRawReferences(): array {
+	public function getRawReferences(): array
+	{
 		$references = [];
 
 		$refListEl = null;
