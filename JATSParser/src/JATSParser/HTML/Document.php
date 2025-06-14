@@ -195,7 +195,11 @@ class Document extends \DOMDocument
 					$blockQuote = $this->createElement("blockquote");
 					if ($articleSection->getTitle()) {
 						$sectionElement = $this->createElement("h" . ($articleSection->getType() + 1), $articleSection->getTitle());
-						$sectionElement->setAttribute("class", "article-dispquote-title");
+						if (($articleSection->getType() + 1) == 2) {
+							$sectionElement->setAttribute("class", "article-section-title subtitle1");
+						} else {
+							$sectionElement->setAttribute("class", "article-section-title");
+						}
 						$blockQuote->appendChild($sectionElement);
 					}
 					$parentEl->appendChild($blockQuote);
