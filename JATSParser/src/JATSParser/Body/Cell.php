@@ -1,10 +1,13 @@
-<?php namespace JATSParser\Body;
+<?php
+
+namespace JATSParser\Body;
 
 use JATSParser\Body\JATSElement as JATSElement;
 use JATSParser\Body\Text as Text;
 use JATSParser\Body\Par as Par;
 
-class Cell extends AbstractElement {
+class Cell extends AbstractElement
+{
 
 	/* @var array Can contain Par and Text */
 	private $content = array();
@@ -26,24 +29,32 @@ class Cell extends AbstractElement {
 	/* @var $align string  */
 	private $align;
 
-	function __construct(\DOMElement $cellNode) {
+	function __construct(\DOMElement $cellNode)
+	{
 		parent::__construct($cellNode);
-		
+
 		$this->type = $cellNode->nodeName;
 
 		$content = array();
 		$xpath = Document::getXpath();
 		$childNodes = $xpath->query("child::node()", $cellNode);
 		foreach ($childNodes as $childNode) {
-			if ($childNode->nodeName === "p") {
-				$par = new Par($childNode);
-				$content[] = $par;
-			} else {
-				$jatsTextNodes = $xpath->query(".//self::text()", $childNode);
-				foreach ($jatsTextNodes as $jatsTextNode){
-					$jatsText = new Text($jatsTextNode);
-					$content[] = $jatsText;
-				}
+			switch ($childNode->nodeName) {
+				case "p":
+					$par = new Par($childNode);
+					$content[] = $par;
+					break;
+				case "inline-graphic":
+					$graphic = new Graphic($childNode);
+					$content[] = $graphic;
+					break;
+				default:
+					$jatsTextNodes = $xpath->query(".//self::text()", $childNode);
+					foreach ($jatsTextNodes as $jatsTextNode) {
+						$jatsText = new Text($jatsTextNode);
+						$content[] = $jatsText;
+					}
+					break;
 			}
 		}
 
@@ -53,7 +64,7 @@ class Cell extends AbstractElement {
 
 		$cellNode->hasAttribute("rowspan") ? $this->rowspan = $cellNode->getAttribute("rowspan") : $this->rowspan = 1;
 
-		$cellNode->hasAttribute("style") ? $this->style = $cellNode->getAttribute("style"): $this->style = ""; // Added by UNLa
+		$cellNode->hasAttribute("style") ? $this->style = $cellNode->getAttribute("style") : $this->style = ""; // Added by UNLa
 
 		$cellNode->hasAttribute("align") ? $this->align = $cellNode->getAttribute("align") : $this->align = "left"; // Added by UNLa
 
@@ -63,7 +74,8 @@ class Cell extends AbstractElement {
 	 * @return array
 	 */
 
-	public function getContent(): array {
+	public function getContent(): array
+	{
 		return $this->content;
 	}
 
@@ -71,7 +83,8 @@ class Cell extends AbstractElement {
 	 * @return string
 	 */
 
-	public function getType(): string {
+	public function getType(): string
+	{
 		return $this->type;
 	}
 

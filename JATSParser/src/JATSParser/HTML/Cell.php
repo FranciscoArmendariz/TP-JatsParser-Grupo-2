@@ -1,18 +1,22 @@
-<?php namespace JATSParser\HTML;
+<?php
+
+namespace JATSParser\HTML;
 
 use JATSParser\Body\Cell as JATSCell;
 use JATSParser\Body\Text as JATSText;
 use JATSParser\HTML\Text as HTMLText;
 
-class Cell extends \DOMElement {
+class Cell extends \DOMElement
+{
 
-	public function __construct(string $type) {
+	public function __construct(string $type)
+	{
 
 		parent::__construct($type);
-
 	}
 
-	public function setContent(JATSCell $cell) {
+	public function setContent(JATSCell $cell)
+	{
 
 		if ($cell->getColspan()) {
 			$this->setAttribute("colspan", $cell->getColspan());
@@ -44,6 +48,11 @@ class Cell extends \DOMElement {
 					$par = new Par();
 					$this->appendChild($par);
 					$par->setContent($cellContents);
+					break;
+				case "JATSParser\Body\Graphic":
+					$graphic = new Graphic();
+					$this->appendChild($graphic);
+					$graphic->setContent($cellContents);
 					break;
 				case "JATSParser\Body\Text":
 					HTMLText::extractText($cellContents, $this);
