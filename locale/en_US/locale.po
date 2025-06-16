@@ -26,6 +26,36 @@ msgstr "Full-text of the article is available for these languages:"
 msgid "plugins.generic.jatsParser.workflow.settings"
 msgstr "JATS Parser Settings"
 
+msgid "plugins.generic.jatsParser.workflow.tab.settings"
+msgstr "Settings"
+
+msgid "plugins.generic.jatsParser.workflow.tab.subtitle1"
+msgstr "Subtitle 1 Style"
+
+msgid "plugins.generic.jatsParser.subtitle1.description"
+msgstr "Subtitle 1 style configuration"
+
+msgid "plugins.generic.jatsParser.subtitle1.color"
+msgstr "Text Color*"
+
+msgid "plugins.generic.jatsParser.subtitle1.font.size"
+msgstr "Font Size*"
+
+msgid "plugins.generic.jatsParser.subtitle1.rem"
+msgstr "rem"
+
+msgid "plugins.generic.jatsParser.subtitle1.line.height"
+msgstr "Line Height*"
+
+msgid "plugins.generic.jatsParser.subtitle1.font.family"
+msgstr "Font Family*"
+
+msgid "plugins.generic.jatsParser.subtitle1.font.weight"
+msgstr "Font Weight*"
+
+msgid "plugins.generic.jatsParser.subtitle1.sampleText"
+msgstr "My Subtitle 1 Sample"
+
 msgid "plugins.generic.jatsParser.settings.description"
 msgstr "JATSParser plugin settings menu"
 

@@ -1,4 +1,6 @@
-<?php namespace JATSParser\HTML;
+<?php
+
+namespace JATSParser\HTML;
 
 use JATSParser\Body\AuthorNote as JATSAuthorNote;
 use JATSParser\Body\Par as JATSPar;
@@ -6,17 +8,19 @@ use JATSParser\Body\Text as JATSText;
 use JATSParser\HTML\Par as Par;
 use JATSParser\HTML\Text as HTMLText;
 
-class AuthorNote extends \DOMElement { // Adeed by UNLa
-	public function __construct() {
+class AuthorNote extends \DOMElement
+{ // Adeed by UNLa
+	public function __construct()
+	{
 
 		parent::__construct("fn");
-
 	}
 
-	public function setContent(JATSAuthorNote $authorNote) {
+	public function setContent(JATSAuthorNote $authorNote)
+	{
 
 		$titleNode = $this->ownerDocument->createElement("h2");
-		$titleNode->setAttribute("class", "article-section-title");
+		$titleNode->setAttribute("class", "article-section-title subtitle1");
 		$this->appendChild($titleNode);
 
 		/* Set author paragraph
@@ -35,7 +39,5 @@ class AuthorNote extends \DOMElement { // Adeed by UNLa
 			$textNode = $this->ownerDocument->createTextNode($authorNote->getLabel());
 			$titleNode->appendChild($textNode);
 		}
-
 	}
-
 }
